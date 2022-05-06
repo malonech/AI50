@@ -1,0 +1,17 @@
+Method to solve Porject0, Degrees
+
+call the person_id for the source as the initial node. 
+Call neighbors function to determine all of the sources costars. 
+check if target is found
+
+if not, add node to explored list
+place all costars into frontier
+update node to one of the frontier names
+check if new node has been explored
+run neighbors function to determine their costars
+check if target is found in new neighboirs list
+
+if not, dd node to explored
+add costars list2 into frontier
+update node to next frontier name
+check if new node has been explored
