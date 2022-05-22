@@ -66,6 +66,11 @@ def load_data(filename):
         # Initialize evidence and label lists
         evidence = list()
         label = list()
+
+        # Initialize list of months
+        months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
         # Load data into evidence and label lists
         for row in reader:
             evidence.append([
@@ -79,7 +84,7 @@ def load_data(filename):
                 float(row['ExitRates']),
                 float(row['PageValues']),
                 float(row['SpecialDay']),
-                row['Month'],
+                months.index(row['Month']) + 1,
                 int(row['OperatingSystems']),
                 int(row['Browser']),
                 int(row['Region']),
@@ -88,33 +93,7 @@ def load_data(filename):
                 int(1 if row['Weekend'] == 'TRUE' else 0)
                 ])
             label.append(1 if row['Revenue'] == 'TRUE' else 0)
-
-        # Loop through evidence and update month
-        for i in range(len(evidence)):
-            if evidence[i][10] == 'Jan':
-                evidence[i][10] = int(0)
-            elif evidence[i][10] == 'Feb':
-                evidence[i][10] = int(1)
-            elif evidence[i][10] == 'Mar':
-                evidence[i][10] = int(2)
-            elif evidence[i][10] == 'Apr':
-                evidence[i][10] = int(3)
-            elif evidence[i][10] == 'May':
-                evidence[i][10] = int(4)
-            elif evidence[i][10] == 'June':
-                evidence[i][10] = int(5)
-            elif evidence[i][10] == 'Jul':
-                evidence[i][10] = int(6)
-            elif evidence[i][10] == 'Aug':
-                evidence[i][10] = int(7)
-            elif evidence[i][10] == 'Sep':
-                evidence[i][10] = int(8)
-            elif evidence[i][10] == 'Oct':
-                evidence[i][10] = int(9)
-            elif evidence[i][10] == 'Nov':
-                evidence[i][10] = int(10)
-            elif evidence[i][10] == 'Dec':
-                evidence[i][10] = int(11)
+            # print(months.index(row['Month']) + 1)
 
         return evidence, label
 
@@ -154,14 +133,15 @@ def evaluate(labels, predictions):
     total_negatives = 0
     correct_positives = 0
     correct_negatives = 0
-    for i in range(len(labels)):
-        if labels[i] == 1:
+
+    for label, prediction in zip(labels, predictions):
+        if label == 1:
             total_positives += 1
-            if labels[i] == predictions[i]:
+            if label == prediction:
                 correct_positives += 1
-        if labels[i] == 0:
+        if label == 0:
             total_negatives += 1
-            if labels[i] == predictions[i]:
+            if label == prediction:
                 correct_negatives += 1
 
     sensitivity = correct_positives / total_positives
