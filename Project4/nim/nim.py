@@ -102,9 +102,10 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-
+        # Join state/action in tuple
         state_tuple = tuple(state)
 
+        # Get state/action Q-value
         if (state_tuple, action) not in self.q:
             return 0
         return self.q[(state_tuple, action)]
@@ -136,18 +137,21 @@ class NimAI():
         Q-value in `self.q`. If there are no available actions in
         `state`, return 0.
         """
+        # Get all possible actions from the current state
         actions = Nim.available_actions(state)
 
+        # Quit if no actions available
         if len(actions) == 0:
             return 0
 
+        # Initialize best future reward dictionary
         BFR = dict()
 
+        # Loop through all possible actions and record its Q value
         for action in actions:
-            if (tuple(state), action) not in self.q:
-                BFR[action] = 0
-            else:
-                BFR[action] = self.get_q_value(state, action)
+            BFR[action] = self.get_q_value(state, action)
+
+        # Get and return maximum Q-value
         max_action = max(BFR, key=BFR.get)
         return BFR[max_action]
 
@@ -166,19 +170,21 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
+        # Get all possible actions from the current state
         actions = Nim.available_actions(state)
         BFR = dict()
 
+        # Get best action based on BFR Q-Value
         for action in actions:
-            if (tuple(state), action) not in self.q:
-                BFR[action] = 0
-            else:
-                BFR[action] = self.get_q_value(state, action)
+            BFR[action] = self.get_q_value(state, action)
         max_action = max(BFR, key=BFR.get)
 
+        # If epsilon False, return max action
         if not epsilon:
             return max_action
+        # If epsilon True, return random move with self.epsilon probability
         else:
+            # Determine choice with self.epsilon percentage
             options = ['best', 'random']
             choice = random.choices(options, weights=((1-self.epsilon), self.epsilon), k=1)
 
